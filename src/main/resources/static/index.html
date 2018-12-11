@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+    <title>Welcome to the hacking toolsite</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+<body>
+<h1>Welcome to the hacker console!</h1>
+
+<form class="form-inline">
+    <div class="form-group">
+        <label for="connect">WebSocket connection:</label>
+        <button id="connect" class="btn btn-default" type="submit">Connect</button>
+        <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+        </button>
+    </div>
+</form>
+
+Active instruction by Websocket : <span id="activeInstructionWS"></span> <br>
+Active instruction by REST UPDATE : <span id="activeInstructionJS"></span> <br>
+
+<button type="button" onclick="setInstruction('left')">LEFT!</button>
+<button type="button" onclick="setInstruction('right')">RIGHT!</button>
+<button type="button" onclick="setInstruction('up')">UP!</button>
+<button type="button" onclick="setInstruction('down')">DOWN!</button>
+
+
+</body>
+
+
+
+
+<script type="text/javascript">
+    //setInterval("getInstruction()",200);
+
+    function setInstruction(instruction){
+
+        $.ajax({url: "/instruction", type: "post", data: instruction, contentType: 'text/html', success: function (data) {
+
+                $("#activeInstructionJS").html(data);
+            }});
+    }
+
+    function getInstruction() {
+
+        $.get("/instruction", function(data) {
+            $("#activeInstructionJS").html(data);
+        });
+    }
+
+    $(document).ready(getInstruction());
+</script>
+</html>
