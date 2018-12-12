@@ -7,24 +7,23 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/instruction")
+@RequestMapping("/map")
 @RequiredArgsConstructor
-public class ControllerBase {
+public class MapController {
 
     private final GameBean gameBean;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @GetMapping
-    public String getInstruction() {
+    public String getMap() {
 
-        return gameBean.getActiveInstruction().getMove();
+        return gameBean.getAsciiBoard();
     }
 
     @PostMapping
-    public String setInstruction(@RequestBody String instruction) {
+    public void setMap(@RequestBody String map) {
 
-        gameBean.setActiveInstruction(Instruction.get(instruction));
-        simpMessagingTemplate.convertAndSend("/topic/instruction", getInstruction());
-        return getInstruction();
+        gameBean.setAsciiBoard(map);
+        simpMessagingTemplate.convertAndSend("/topic/map", map);
     }
 }

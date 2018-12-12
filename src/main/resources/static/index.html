@@ -9,29 +9,97 @@
     <script src="/app.js"></script>
 </head>
 <body>
-<h1>Welcome to the hacker console!</h1>
+<h1 style="text-align: center;">Welcome to Uganda!</h1>
 
-<form class="form-inline">
-    <div class="form-group">
-        <label for="connect">WebSocket connection:</label>
-        <button id="connect" class="btn btn-default" type="submit">Connect</button>
-        <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-        </button>
-    </div>
-</form>
 
-Active instruction by Websocket : <span id="activeInstructionWS"></span> <br>
-Active instruction by REST UPDATE : <span id="activeInstructionJS"></span> <br>
 
-<button type="button" onclick="setInstruction('left')">LEFT!</button>
-<button type="button" onclick="setInstruction('right')">RIGHT!</button>
-<button type="button" onclick="setInstruction('up')">UP!</button>
-<button type="button" onclick="setInstruction('down')">DOWN!</button>
+<div>
+    <table>
+        <tr>
+            <th><div id="realTimeMap" class="map-box"></div></th>
+            <th>
+                <div>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="connect">WebSocket connection:</label>
+                            <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                            <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                            </button>
+                        </div>
+                    </form>
+                    <br>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="activateHack">Activate Instruction Hack:</label>
+                            <button id="activateHack" class="btn btn-default" type="submit">Activate</button>
+                            <button id="deactivateHack" class="btn btn-default" type="submit" disabled="disabled">Deactivate</button>
+                        </div>
+                    </form>
+                    <br>
+                    Active instruction by REST UPDATE : <span id="activeInstructionJS"></span> <br>
+                    Active instruction by Websocket : <span id="activeInstructionWS"></span> <br>
+                    Hack tool is <span id="isActive"></span><br>
+                </div>
+            </th>
+        </tr>
+    </table>
+</div>
+
+
+
+
+<div class="controller">
+    <table class="controller-table">
+        <colgroup>
+            <col style = "width:20%">
+            <col style = "width:20%">
+            <col style = "width:20%">
+            <col style = "width:20%">
+            <col style = "width:20%">
+        </colgroup>
+        <tbody>
+            <tr>
+                <th></th>
+                <th></th>
+                <th><button type="button" onclick="setInstruction('f-up')">F-UP!</button></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th><button type="button" onclick="setInstruction('up')">UP!</button></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th><button type="button" onclick="setInstruction('f-left')">F-LEFT!</button></th>
+                <th><button type="button" onclick="setInstruction('left')">LEFT!</button></th>
+                <th></th>
+                <th><button type="button" onclick="setInstruction('right')">RIGHT!</button></th>
+                <th><button type="button" onclick="setInstruction('f-left')">F-RIGHT!</button></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th><button type="button" onclick="setInstruction('down')">DOWN!</button></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <<th><button type="button" onclick="setInstruction('f-down')">F-DOWN!</button></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 
 
 </body>
-
-
 
 
 <script type="text/javascript">
@@ -52,6 +120,53 @@ Active instruction by REST UPDATE : <span id="activeInstructionJS"></span> <br>
         });
     }
 
-    $(document).ready(getInstruction());
+    function getMap() {
+
+        $.get("/map", function(data) {
+            $("#realTimeMap").html(data);
+        });
+    }
+
+    function getIsActive() {
+
+        $.get("/activator", function(data) {
+            $("#isActive").html(data);
+        });
+    }
+
+    $(document).ready(function () {
+        getInstruction();
+        getMap();
+        getIsActive();
+    });
 </script>
+
+<style>
+
+    .map-box {
+        background-color: lightgrey;
+        border: 5px solid black;
+        padding: 25px;
+        margin: 25px;
+        font-family: monospace;
+        font-size: 23px;
+        line-height: 1;
+        width: fit-content;
+    }
+
+    .controller{
+        width: -webkit-fill-available;
+    }
+
+    .controller-table{
+        width: -webkit-fill-available;
+    }
+
+
+    button{
+        width: -webkit-fill-available;
+        margin-top: 10px;
+    }
+
+</style>
 </html>
